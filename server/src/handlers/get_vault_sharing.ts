@@ -1,10 +1,19 @@
+import { db } from '../db';
+import { vaultSharingTable } from '../db/schema';
 import { type VaultSharing } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export const getVaultSharing = async (vaultId: number): Promise<VaultSharing[]> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is fetching all users who have access to a specific vault.
-    // Should include user details and permission levels.
-    // Should verify the requesting user has admin access to the vault.
-    console.log('Getting vault sharing for vault:', vaultId);
-    return Promise.resolve([]); // Placeholder - should return vault sharing records
+  try {
+    // Fetch all vault sharing records for the specified vault
+    const results = await db.select()
+      .from(vaultSharingTable)
+      .where(eq(vaultSharingTable.vault_id, vaultId))
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Getting vault sharing failed:', error);
+    throw error;
+  }
 };
